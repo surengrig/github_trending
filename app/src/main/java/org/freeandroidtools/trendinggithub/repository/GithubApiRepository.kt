@@ -2,6 +2,7 @@ package org.freeandroidtools.trendinggithub.repository
 
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
+import org.freeandroidtools.trendinggithub.TrendingApp
 import org.freeandroidtools.trendinggithub.enqueue
 import org.freeandroidtools.trendinggithub.model.GithubRepo
 import org.freeandroidtools.trendinggithub.model.SearchResult
@@ -9,9 +10,16 @@ import org.freeandroidtools.trendinggithub.service.GithubApiService
 import org.joda.time.LocalDate
 import retrofit2.Call
 import retrofit2.Response
-import javax.security.auth.callback.Callback
+import javax.inject.Inject
 
-class GithubApiRepository(private val service: GithubApiService) {
+class GithubApiRepository {
+
+    init {
+        TrendingApp.netComponent.inject(this)
+    }
+
+    @Inject
+    lateinit var service: GithubApiService
 
     /**
      *  Get trending repos for the last specified days
@@ -22,6 +30,7 @@ class GithubApiRepository(private val service: GithubApiService) {
     fun getTrending(data: MutableLiveData<List<GithubRepo>>, topic: String, days: Int) {
         val fromDate = LocalDate().minusDays(days)
         val query = "topic:$topic+created:>$fromDate+stars:>1"
+
 
         service.searchRepos(
                 query,
