@@ -6,8 +6,8 @@ import org.freeandroidtools.trendinggithub.viewmodel.TrendingViewModel
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [NetModule::class])
-interface NetComponent {
+@Component(modules = [AppModule::class])
+interface AppComponent {
     fun inject(repository: GithubApiRepository)
     fun inject(viewModel: TrendingViewModel)
 }
