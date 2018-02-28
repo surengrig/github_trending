@@ -1,4 +1,4 @@
-package org.freeandroidtools.trendinggithub
+package org.freeandroidtools.trendinggithub.helpers
 
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.LiveData

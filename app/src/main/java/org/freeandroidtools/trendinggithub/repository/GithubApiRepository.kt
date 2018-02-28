@@ -1,57 +1,99 @@
 package org.freeandroidtools.trendinggithub.repository
 
-import android.arch.lifecycle.MutableLiveData
-import android.util.Log
+import android.arch.lifecycle.MediatorLiveData
+import android.content.SharedPreferences
+import org.freeandroidtools.trendinggithub.helpers.Constants
 import org.freeandroidtools.trendinggithub.TrendingApp
-import org.freeandroidtools.trendinggithub.enqueue
+import org.freeandroidtools.trendinggithub.db.RepoDatabase
+import org.freeandroidtools.trendinggithub.helpers.enqueue
 import org.freeandroidtools.trendinggithub.model.GithubRepo
-import org.freeandroidtools.trendinggithub.model.SearchResult
 import org.freeandroidtools.trendinggithub.service.GithubApiService
 import org.joda.time.LocalDate
-import retrofit2.Call
-import retrofit2.Response
+import java.util.*
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 import javax.inject.Inject
+
 
 class GithubApiRepository {
 
     init {
-        TrendingApp.netComponent.inject(this)
+        TrendingApp.appComponent.inject(this)
     }
 
     @Inject
     lateinit var service: GithubApiService
 
+    @Inject
+    lateinit var repoDatabase: RepoDatabase
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
+
+    private val executor: Executor = Executors.newFixedThreadPool(2)
+
+
+    val data: MediatorLiveData<List<GithubRepo>> by lazy { MediatorLiveData<List<GithubRepo>>() }
+
     /**
      *  Get trending repos for the last specified days
-     * @param data LiveData updated with fetched repos
      * @param topic a topic to search for
      * @param days the last number of days to search for
      */
-    fun getTrending(data: MutableLiveData<List<GithubRepo>>, topic: String, days: Int) {
+    fun getTrending(topic: String, days: Int): MediatorLiveData<List<GithubRepo>> {
+        val source = repoDatabase.repoDao().getAll()
+
         val fromDate = LocalDate().minusDays(days)
         val query = "topic:$topic+created:>$fromDate+stars:>1"
 
+        data.addSource(source) {
+            val lastModified = sharedPreferences.getLong(Constants.REFRESH_TIMESTAMP_KEY, Constants.REFRESH_TIMEOUT)
 
-        service.searchRepos(
-                query,
-                "stars",
-                "desc"
-        ).enqueue(
-                {
-                    it.body()?.repos?.forEach { Log.d(TAG, "stars:${it.stargazersCount} score:${it.score}, forks${it.forksCount}") }
-                    data.value = it.body()?.repos
-                },
-                {
-                    data.value = null
-                })
-        service.searchRepos(
-                query,
-                "stars",
-                "desc"
-        ).enqueue(object : retrofit2.Callback<SearchResult> {
-            override fun onResponse(call: Call<SearchResult>?, response: Response<SearchResult>?) {}
-            override fun onFailure(call: Call<SearchResult>?, t: Throwable?) {}
-        })
+            if (it?.isNotEmpty() == false || Date().time - lastModified >= Constants.REFRESH_TIMEOUT) {
+                executor.execute {
+                    val response = service.searchRepos(query, "stars", "desc")
+                            .execute()
+                    if (response.isSuccessful) {
+                        response.body()?.let {
+                            refreshData(it.repos)
+                        }
+                    }
+                }
+            } else {
+                data.value = it
+            }
+        }
+        return data
+    }
+
+    fun refreshTrending(topic: String, days: Int) {
+        val fromDate = LocalDate().minusDays(days)
+        val query = "topic:$topic+created:>$fromDate+stars:>1"
+
+        service.searchRepos(query, "stars", "desc")
+                .enqueue(
+                        {
+                            if (it.isSuccessful) {
+                                it.body()?.let {
+                                    executor.execute {
+                                        refreshData(it.repos)
+                                    }
+                                }
+                            } else {
+                                data.value = data.value
+                            }
+                        },
+                        {
+                            data.value = data.value
+                        })
+    }
+
+    private fun refreshData(repos: List<GithubRepo>) {
+        repoDatabase.repoDao().deleteAll()
+        repoDatabase.repoDao().insertAll(repos)
+        sharedPreferences.edit()
+                .putLong(Constants.REFRESH_TIMESTAMP_KEY, Date().time)
+                .apply()
     }
 
     companion object {

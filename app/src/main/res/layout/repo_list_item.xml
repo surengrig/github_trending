@@ -7,7 +7,7 @@
     android:layout_marginEnd="@dimen/margin_small"
     android:layout_marginStart="@dimen/margin_small"
     android:background="?android:attr/selectableItemBackground"
-    tools:context="org.freeandroidtools.trendinggithub.ui.MainActivity">
+    tools:context="org.freeandroidtools.trendinggithub.ui.main.MainActivity">
 
     <TextView
         android:id="@+id/repo_name_textview"

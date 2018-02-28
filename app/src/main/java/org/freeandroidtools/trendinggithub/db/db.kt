@@ -1,5 +1,6 @@
 package org.freeandroidtools.trendinggithub.db
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import org.freeandroidtools.trendinggithub.model.DateConverter
 import org.freeandroidtools.trendinggithub.model.GithubRepo
@@ -9,17 +10,21 @@ import org.freeandroidtools.trendinggithub.model.GithubRepo
 interface RepoDao {
 
     @Query("SELECT * FROM repo")
-    fun getAll(): List<GithubRepo>
+    fun getAll(): LiveData<List<GithubRepo>>
 
     @Insert
     fun insert(repo: GithubRepo)
 
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(repos: List<GithubRepo>)
+
+
+    @Query("DELETE FROM repo")
+    fun deleteAll()
 }
 
-@Database(entities = [(GithubRepo::class)], exportSchema = false, version = 1)
+@Database(entities = [(GithubRepo::class)], exportSchema = false, version = 4)
 @TypeConverters(DateConverter::class)
 abstract class RepoDatabase : RoomDatabase() {
     abstract fun repoDao(): RepoDao

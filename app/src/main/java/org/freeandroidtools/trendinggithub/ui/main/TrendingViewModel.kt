@@ -1,4 +1,4 @@
-package org.freeandroidtools.trendinggithub.viewmodel
+package org.freeandroidtools.trendinggithub.ui.main
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
@@ -9,16 +9,20 @@ import javax.inject.Inject
 
 class TrendingViewModel : ViewModel() {
     init {
-        TrendingApp.netComponent.inject(this)
+        TrendingApp.appComponent.inject(this)
     }
 
     @Inject
     lateinit var repository: GithubApiRepository
 
-    val trendingData: MutableLiveData<List<GithubRepo>> = MutableLiveData()
-
-    fun getTrending() {
-        repository.getTrending(trendingData, "Android", 30)
+    val trendingData: MutableLiveData<List<GithubRepo>> by lazy {
+        getTrending()
     }
+
+    fun getTrending(): MutableLiveData<List<GithubRepo>> =
+            repository.getTrending("Android", 30)
+
+    fun refreshTrending() =
+            repository.refreshTrending("Android", 30)
 
 }

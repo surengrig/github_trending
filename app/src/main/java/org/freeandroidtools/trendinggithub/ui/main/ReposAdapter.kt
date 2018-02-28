@@ -1,4 +1,4 @@
-package org.freeandroidtools.trendinggithub.ui.adapter
+package org.freeandroidtools.trendinggithub.ui.main
 
 import android.content.Context
 import android.net.Uri
@@ -14,6 +14,7 @@ import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.repo_list_item.view.*
 import org.freeandroidtools.trendinggithub.model.GithubRepo
 import org.freeandroidtools.trendinggithub.R
+import org.freeandroidtools.trendinggithub.ui.main.GlideApp
 
 
 @GlideModule
