@@ -9,14 +9,15 @@ import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import org.freeandroidtools.trendinggithub.db.RepoDatabase
-import org.freeandroidtools.trendinggithub.repository.GithubApiRepository
 import org.freeandroidtools.trendinggithub.service.GithubApiService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 import javax.inject.Singleton
 
 @Module
-class AppModule(private val app:Application) {
+class AppModule(private val app: Application) {
 
     @Provides
     @Singleton
@@ -40,19 +41,17 @@ class AppModule(private val app:Application) {
 
     @Provides
     @Singleton
-    fun provideGithubApiRepository(): GithubApiRepository = GithubApiRepository()
+    fun provideRepoDatabase(): RepoDatabase =
+            Room.databaseBuilder(app.applicationContext, RepoDatabase::class.java, "repos_db")
+                    .fallbackToDestructiveMigration()
+                    .build()
 
     @Provides
     @Singleton
-    fun providesRepoDatabase(): RepoDatabase {
-        return Room.databaseBuilder(app.applicationContext, RepoDatabase::class.java, "repos_db")
-                .fallbackToDestructiveMigration()
-                .build()
-    }
+    fun provideSharedPrefs(): SharedPreferences =
+            app.getSharedPreferences("config", Context.MODE_PRIVATE)
 
     @Provides
     @Singleton
-    fun providesSharedPrefs(): SharedPreferences {
-        return app.getSharedPreferences("config", Context.MODE_PRIVATE)
-    }
+    fun provideExecutor(): Executor = Executors.newFixedThreadPool(2)
 }

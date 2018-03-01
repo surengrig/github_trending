@@ -2,56 +2,45 @@ package org.freeandroidtools.trendinggithub.repository
 
 import android.arch.lifecycle.MediatorLiveData
 import android.content.SharedPreferences
-import org.freeandroidtools.trendinggithub.helpers.Constants
-import org.freeandroidtools.trendinggithub.TrendingApp
 import org.freeandroidtools.trendinggithub.db.RepoDatabase
+import org.freeandroidtools.trendinggithub.helpers.Constants
 import org.freeandroidtools.trendinggithub.helpers.enqueue
 import org.freeandroidtools.trendinggithub.model.GithubRepo
+import org.freeandroidtools.trendinggithub.model.SearchResult
 import org.freeandroidtools.trendinggithub.service.GithubApiService
 import org.joda.time.LocalDate
+import retrofit2.Call
 import java.util.*
 import java.util.concurrent.Executor
-import java.util.concurrent.Executors
 import javax.inject.Inject
 
 
-class GithubApiRepository {
-
-    init {
-        TrendingApp.appComponent.inject(this)
-    }
+class GithubApiRepository @Inject constructor(private var service: GithubApiService,
+                                              private var repoDatabase: RepoDatabase,
+                                              private var sharedPreferences: SharedPreferences) {
 
     @Inject
-    lateinit var service: GithubApiService
-
-    @Inject
-    lateinit var repoDatabase: RepoDatabase
-
-    @Inject
-    lateinit var sharedPreferences: SharedPreferences
-
-    private val executor: Executor = Executors.newFixedThreadPool(2)
-
+    lateinit var executor: Executor
 
     val data: MediatorLiveData<List<GithubRepo>> by lazy { MediatorLiveData<List<GithubRepo>>() }
 
     /**
-     *  Get trending repos for the last specified days
+     * Get trending repos for the last specified days. It tries to fetch from local db first. if
+     * if the data is not available or the data was fetched more tna 24h ago, it fetches from the
+     * server and caches the result to db.
+     *
      * @param topic a topic to search for
      * @param days the last number of days to search for
+     * @return a LiveData with trending repos
      */
     fun getTrending(topic: String, days: Int): MediatorLiveData<List<GithubRepo>> {
         val source = repoDatabase.repoDao().getAll()
-
-        val fromDate = LocalDate().minusDays(days)
-        val query = "topic:$topic+created:>$fromDate+stars:>1"
-
         data.addSource(source) {
             val lastModified = sharedPreferences.getLong(Constants.REFRESH_TIMESTAMP_KEY, Constants.REFRESH_TIMEOUT)
 
             if (it?.isNotEmpty() == false || Date().time - lastModified >= Constants.REFRESH_TIMEOUT) {
                 executor.execute {
-                    val response = service.searchRepos(query, "stars", "desc")
+                    val response = trendingReposEndpoint(topic, days)
                             .execute()
                     if (response.isSuccessful) {
                         response.body()?.let {
@@ -66,11 +55,15 @@ class GithubApiRepository {
         return data
     }
 
-    fun refreshTrending(topic: String, days: Int) {
-        val fromDate = LocalDate().minusDays(days)
-        val query = "topic:$topic+created:>$fromDate+stars:>1"
 
-        service.searchRepos(query, "stars", "desc")
+    /**
+     * Syncs the local db with the server and updates the LiveData
+     * @param topic a topic to search for
+     * @param days the last number of days to search for
+     * @return a LiveData with trending repos
+     */
+    fun refreshTrending(topic: String, days: Int) {
+        trendingReposEndpoint(topic, days)
                 .enqueue(
                         {
                             if (it.isSuccessful) {
@@ -88,6 +81,19 @@ class GithubApiRepository {
                         })
     }
 
+
+    private fun trendingReposEndpoint(topic: String, days: Int): Call<SearchResult> {
+        val fromDate = LocalDate().minusDays(days)
+        val query = "topic:$topic+created:>$fromDate+stars:>1"
+        return service.searchRepos(query, "stars", "desc")
+    }
+
+
+    /**
+     * Deletes all items in db and inserts repos
+     *
+     * @param repos repository list to insert
+     */
     private fun refreshData(repos: List<GithubRepo>) {
         repoDatabase.repoDao().deleteAll()
         repoDatabase.repoDao().insertAll(repos)

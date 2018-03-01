@@ -12,9 +12,8 @@ import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.repo_list_item.view.*
-import org.freeandroidtools.trendinggithub.model.GithubRepo
 import org.freeandroidtools.trendinggithub.R
-import org.freeandroidtools.trendinggithub.ui.main.GlideApp
+import org.freeandroidtools.trendinggithub.model.GithubRepo
 
 
 @GlideModule
@@ -58,7 +57,7 @@ class ReposAdapter : RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
 
     }
 
-    private fun openDetails(context:Context,  repo: GithubRepo) {
+    private fun openDetails(context: Context, repo: GithubRepo) {
         val uri = Uri.parse(repo.htmlUrl)
         CustomTabsIntent.Builder()
                 .setToolbarColor(ContextCompat.getColor(context, R.color.colorPrimary))

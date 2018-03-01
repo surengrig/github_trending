@@ -8,6 +8,5 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [AppModule::class])
 interface AppComponent {
-    fun inject(repository: GithubApiRepository)
     fun inject(viewModel: TrendingViewModel)
 }
