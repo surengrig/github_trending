@@ -1,9 +1,7 @@
 package org.freeandroidtools.trendinggithub.ui.main
 
 import android.content.Context
-import android.net.Uri
-import android.support.customtabs.CustomTabsIntent
-import android.support.v4.content.ContextCompat
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +12,7 @@ import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.repo_list_item.view.*
 import org.freeandroidtools.trendinggithub.R
 import org.freeandroidtools.trendinggithub.model.GithubRepo
+import org.freeandroidtools.trendinggithub.ui.repodetail.RepoDetailActivity
 
 
 @GlideModule
@@ -33,7 +32,6 @@ class ReposAdapter : RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         holder?.initData(items[position])
-
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -58,12 +56,10 @@ class ReposAdapter : RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
     }
 
     private fun openDetails(context: Context, repo: GithubRepo) {
-        val uri = Uri.parse(repo.htmlUrl)
-        CustomTabsIntent.Builder()
-                .setToolbarColor(ContextCompat.getColor(context, R.color.colorPrimary))
-                .setShowTitle(true)
-                .build()
-                .launchUrl(context, uri)
+        val intent = Intent(context, RepoDetailActivity::class.java).apply {
+            putExtra(RepoDetailActivity.EXTRA_REPO_ID, repo.id)
+        }
+        context.startActivity(intent)
     }
 
     fun updateData(repos: List<GithubRepo>) {

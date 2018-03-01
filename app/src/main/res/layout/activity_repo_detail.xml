@@ -1,14 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="org.freeandroidtools.trendinggithub.ui.main.MainActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark">
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            tools:text="Awesome repo" />
+    </android.support.v7.widget.Toolbar>
 
 
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/margin_normal">
+
+            <TextView
+                android:id="@+id/repo_name_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Awesome Repository" />
 
 
+            <TextView
+                android:id="@+id/repo_updated_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/repo_name_textview"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="2015/1216" />
 
-</android.support.constraint.ConstraintLayout>
+            <ImageView
+                android:id="@+id/avatar_imageview"
+                android:layout_width="@dimen/icon_size_small"
+                android:layout_height="@dimen/icon_size_small"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_weight="1"
+                android:foregroundGravity="left"
+                android:src="@drawable/ic_github"
+                app:layout_constraintLeft_toLeftOf="@+id/repo_description_textview"
+                app:layout_constraintTop_toBottomOf="@+id/repo_description_textview" />
+
+            <TextView
+                android:id="@+id/owner_name_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_small"
+                android:src="@mipmap/ic_launcher"
+                app:layout_constraintBottom_toBottomOf="@+id/avatar_imageview"
+                app:layout_constraintStart_toEndOf="@+id/avatar_imageview"
+                app:layout_constraintTop_toTopOf="@+id/avatar_imageview"
+                tools:text="256" />
+
+
+            <ImageView
+                android:id="@+id/star_imageview"
+                android:layout_width="@dimen/icon_size_small"
+                android:layout_height="@dimen/icon_size_small"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:src="@drawable/ic_star_black_24dp"
+                android:tint="@color/colorAccent"
+                app:layout_constraintBottom_toBottomOf="@+id/avatar_imageview"
+                app:layout_constraintEnd_toStartOf="@+id/stars_textview"
+                app:layout_constraintTop_toTopOf="@+id/avatar_imageview" />
+
+
+            <TextView
+                android:id="@+id/stars_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:src="@mipmap/ic_launcher"
+                app:layout_constraintBottom_toBottomOf="@+id/star_imageview"
+                app:layout_constraintEnd_toStartOf="@+id/forked_imageview"
+                app:layout_constraintTop_toTopOf="@+id/star_imageview"
+                tools:text="256" />
+
+            <ImageView
+                android:id="@+id/forked_imageview"
+                android:layout_width="@dimen/icon_size_small"
+                android:layout_height="@dimen/icon_size_small"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:padding="2dp"
+                android:src="@drawable/ic_forked_repo"
+                android:tint="@color/colorAccent"
+                app:layout_constraintBottom_toBottomOf="@+id/avatar_imageview"
+                app:layout_constraintEnd_toStartOf="@+id/fork_count_textview"
+                app:layout_constraintTop_toTopOf="@+id/avatar_imageview" />
+
+
+            <TextView
+                android:id="@+id/fork_count_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:src="@mipmap/ic_launcher"
+                app:layout_constraintBottom_toBottomOf="@+id/star_imageview"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/star_imageview"
+                tools:text="256" />
+
+
+            <TextView
+                android:id="@+id/repo_description_textview"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:padding="@dimen/margin_normal"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                app:layout_constraintLeft_toLeftOf="@+id/repo_name_textview"
+                app:layout_constraintTop_toBottomOf="@+id/repo_name_textview"
+                tools:text="Repository description" />
+
+
+            <Button
+                android:id="@+id/open_url"
+                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:text="@string/open_on_github"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/forked_imageview" />
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+</LinearLayout>

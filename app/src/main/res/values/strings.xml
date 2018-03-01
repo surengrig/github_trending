@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Trending on GitHub</string>
+    <string name="open_on_github">open on github</string>
 </resources>

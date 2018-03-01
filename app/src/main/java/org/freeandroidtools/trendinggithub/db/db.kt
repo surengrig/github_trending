@@ -27,7 +27,7 @@ interface RepoDao {
     fun getById(id: String): LiveData<List<GithubRepo>>
 }
 
-@Database(entities = [(GithubRepo::class)], exportSchema = false, version = 4)
+@Database(entities = [(GithubRepo::class)], exportSchema = false, version = 6)
 @TypeConverters(DateConverter::class)
 abstract class RepoDatabase : RoomDatabase() {
     abstract fun repoDao(): RepoDao
