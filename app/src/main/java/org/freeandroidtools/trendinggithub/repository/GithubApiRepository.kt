@@ -1,5 +1,6 @@
 package org.freeandroidtools.trendinggithub.repository
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.content.SharedPreferences
 import org.freeandroidtools.trendinggithub.db.RepoDatabase
@@ -102,7 +103,17 @@ class GithubApiRepository @Inject constructor(private var service: GithubApiServ
                 .apply()
     }
 
+    /**
+     * Returns repo with the given id
+     *
+     * @param id of the repo to get
+     */
+    fun getRepo(id: String): LiveData<List<GithubRepo>> {
+        return repoDatabase.repoDao().getById(id)
+    }
+
     companion object {
         val TAG: String = GithubApiRepository::class.java.simpleName
     }
+
 }
