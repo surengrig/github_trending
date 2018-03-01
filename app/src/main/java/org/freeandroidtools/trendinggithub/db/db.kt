@@ -22,6 +22,9 @@ interface RepoDao {
 
     @Query("DELETE FROM repo")
     fun deleteAll()
+
+    @Query("SELECT * FROM repo WHERE id = :id")
+    fun getById(id: String): LiveData<List<GithubRepo>>
 }
 
 @Database(entities = [(GithubRepo::class)], exportSchema = false, version = 4)
