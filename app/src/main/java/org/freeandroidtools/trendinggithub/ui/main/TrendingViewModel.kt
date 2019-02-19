@@ -1,7 +1,7 @@
 package org.freeandroidtools.trendinggithub.ui.main
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import org.freeandroidtools.trendinggithub.TrendingApp
 import org.freeandroidtools.trendinggithub.model.GithubRepo
 import org.freeandroidtools.trendinggithub.repository.GithubApiRepository
@@ -20,9 +20,9 @@ class TrendingViewModel : ViewModel() {
     }
 
     fun getTrending(): MutableLiveData<List<GithubRepo>> =
-            repository.getTrending("Android", 30)
+        repository.getTrending("Android", 30)
 
     fun refreshTrending() =
-            repository.refreshTrending("Android", 30)
+        repository.refreshTrending("Android", 30)
 
 }

@@ -1,7 +1,7 @@
 package org.freeandroidtools.trendinggithub.repository
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import android.content.SharedPreferences
 import org.freeandroidtools.trendinggithub.db.RepoDatabase
 import org.freeandroidtools.trendinggithub.helpers.Constants

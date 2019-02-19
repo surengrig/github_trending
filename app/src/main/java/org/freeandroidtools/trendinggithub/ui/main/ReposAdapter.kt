@@ -2,7 +2,6 @@ package org.freeandroidtools.trendinggithub.ui.main
 
 import android.content.Context
 import android.content.Intent
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,23 +17,25 @@ import org.freeandroidtools.trendinggithub.ui.repodetail.RepoDetailActivity
 @GlideModule
 class MyAppGlideModule : AppGlideModule()
 
-class ReposAdapter : RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
+class ReposAdapter : androidx.recyclerview.widget.RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
+
     private val items = ArrayList<GithubRepo>()
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent?.context)
-                .inflate(R.layout.repo_list_item, parent, false)
+            .inflate(R.layout.repo_list_item, parent, false)
 
         return ViewHolder(view)
     }
 
     override fun getItemCount(): Int = items.size
 
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder?.initData(items[position])
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) :
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         fun initData(repo: GithubRepo) {
             itemView.repo_description_textview.text = repo.description
             itemView.repo_name_textview.text = repo.name
@@ -43,10 +44,10 @@ class ReposAdapter : RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
             itemView.owner_name_textview.text = repo.owner.login
 
             GlideApp.with(itemView)
-                    .load(repo.owner.avatarUrl)
-                    .apply(RequestOptions.circleCropTransform())
-                    .placeholder(R.drawable.ic_github)
-                    .into(itemView.avatar_imageview)
+                .load(repo.owner.avatarUrl)
+                .apply(RequestOptions.circleCropTransform())
+                .placeholder(R.drawable.ic_github)
+                .into(itemView.avatar_imageview)
 
             itemView.setOnClickListener {
                 openDetails(itemView.context, repo)

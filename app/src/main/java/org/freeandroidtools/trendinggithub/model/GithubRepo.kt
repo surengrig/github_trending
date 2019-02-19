@@ -1,9 +1,9 @@
 package org.freeandroidtools.trendinggithub.model
 
-import android.arch.persistence.room.Embedded
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
-import android.arch.persistence.room.TypeConverter
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverter
 import com.google.gson.annotations.SerializedName
 import java.util.*
 

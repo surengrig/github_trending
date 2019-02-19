@@ -1,8 +1,8 @@
 package org.freeandroidtools.trendinggithub.helpers
 
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

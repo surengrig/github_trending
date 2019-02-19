@@ -1,7 +1,7 @@
 package org.freeandroidtools.trendinggithub.ui.repodetail
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import org.freeandroidtools.trendinggithub.TrendingApp
 import org.freeandroidtools.trendinggithub.model.GithubRepo
 import org.freeandroidtools.trendinggithub.repository.GithubApiRepository

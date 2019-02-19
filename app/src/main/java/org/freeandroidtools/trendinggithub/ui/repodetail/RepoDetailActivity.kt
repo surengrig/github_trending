@@ -1,11 +1,11 @@
 package org.freeandroidtools.trendinggithub.ui.repodetail
 
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProviders
 import android.net.Uri
 import android.os.Bundle
-import android.support.customtabs.CustomTabsIntent
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.activity_repo_detail.*
 import org.freeandroidtools.trendinggithub.R
