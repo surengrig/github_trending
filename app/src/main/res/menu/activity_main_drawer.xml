@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group
+        android:id="@+id/nav_account_group"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_logout"
+            android:checkable="false"
+            android:icon="@drawable/ic_logout"
+            android:title="@string/logout"/>
+    </group>
+
+
+
+    <group
+        android:id="@+id/nav_main_group"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_trending"
+            android:icon="@drawable/ic_trending_18dp"
+            android:title="@string/trending" />
+
+        <item
+            android:id="@+id/nav_starred"
+            android:icon="@drawable/ic_star_black_24dp"
+            android:title="@string/starred" />
+
+    </group>
+
+
+
+    <!--<item android:title="Communicate">-->
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_share"-->
+                <!--android:icon="@drawable/ic_star_black_24dp"-->
+                <!--android:title="Share" />-->
+        <!--</menu>-->
+    <!--</item>-->
+
+</menu>

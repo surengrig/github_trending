@@ -61,10 +61,10 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:src="@mipmap/ic_launcher"
-        android:text="256"
         app:layout_constraintBottom_toBottomOf="@+id/star_imageview"
         app:layout_constraintEnd_toStartOf="@+id/forked_imageview"
-        app:layout_constraintTop_toTopOf="@+id/star_imageview" />
+        app:layout_constraintTop_toTopOf="@+id/star_imageview"
+        tools:text="256" />
 
     <ImageView
         android:id="@+id/forked_imageview"
@@ -85,10 +85,10 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_small"
         android:src="@mipmap/ic_launcher"
-        android:text="256"
         app:layout_constraintBottom_toBottomOf="@+id/star_imageview"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/star_imageview" />
+        app:layout_constraintTop_toTopOf="@+id/star_imageview"
+        tools:text="256" />
 
 
     <TextView
@@ -99,6 +99,7 @@
         android:maxLines="3"
         android:paddingBottom="@dimen/margin_small"
         android:paddingStart="@dimen/margin_normal"
+        android:paddingEnd="@dimen/margin_normal"
         android:paddingTop="@dimen/margin_small"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
         app:layout_constraintLeft_toLeftOf="@+id/repo_name_textview"
