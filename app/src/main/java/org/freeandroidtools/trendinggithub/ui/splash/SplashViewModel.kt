@@ -2,6 +2,7 @@ package org.freeandroidtools.trendinggithub.ui.splash
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.freeandroidtools.trendinggithub.TrendingApp
 import org.freeandroidtools.trendinggithub.helpers.Error
@@ -22,9 +23,10 @@ class SplashViewModel : ViewModel() {
     }
 
     private val signInData by lazy { MutableLiveData<Result<User>>() }
+    private val disposables = CompositeDisposable()
 
     fun autoLogin(): MutableLiveData<Result<User>> {
-        repository.getAuthorisedUser()
+        val disposable = repository.getAuthorisedUser()
             .subscribeOn(Schedulers.io())
             .subscribe(
                 {
@@ -42,7 +44,13 @@ class SplashViewModel : ViewModel() {
                 }
 
             )
+        disposables.add(disposable)
 
         return signInData
+    }
+
+    override fun onCleared() {
+        disposables.dispose()
+        super.onCleared()
     }
 }

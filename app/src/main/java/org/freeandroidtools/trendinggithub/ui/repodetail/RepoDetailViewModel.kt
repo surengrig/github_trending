@@ -21,4 +21,9 @@ class RepoDetailViewModel : ViewModel() {
 
     fun geStarredRepo(id: String): LiveData<List<StarredRepo>> =
             repository.getStarredRepoById(id)
+
+    override fun onCleared() {
+        repository.dispose()
+        super.onCleared()
+    }
 }

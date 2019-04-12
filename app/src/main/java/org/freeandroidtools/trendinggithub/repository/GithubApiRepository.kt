@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import io.reactivex.Flowable
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.freeandroidtools.trendinggithub.db.RepoDatabase
 import org.freeandroidtools.trendinggithub.helpers.Constants
@@ -14,7 +15,7 @@ import org.freeandroidtools.trendinggithub.model.StarredRepo
 import org.freeandroidtools.trendinggithub.service.GithubApiService
 import org.joda.time.LocalDate
 import retrofit2.Call
-import java.util.Date
+import java.util.*
 import java.util.concurrent.Executor
 import javax.inject.Inject
 
@@ -29,6 +30,11 @@ class GithubApiRepository @Inject constructor(
     lateinit var executor: Executor
 
     val data: MediatorLiveData<List<GithubRepo>> by lazy { MediatorLiveData<List<GithubRepo>>() }
+    private val compositeDisposable = CompositeDisposable()
+
+    fun dispose() {
+        compositeDisposable.dispose()
+    }
 
     /**
      * Get trending repos for the last specified days. It tries to fetch from local db first. if
@@ -41,7 +47,8 @@ class GithubApiRepository @Inject constructor(
      */
     fun getTrending(topic: String, days: Int): Flowable<List<GithubRepo>> {
         val source = repoDatabase.repoDao().getAll()
-        source
+
+        val disposable = source
             .take(1)
             .subscribe {
                 executor.execute {
@@ -54,6 +61,7 @@ class GithubApiRepository @Inject constructor(
                     }
                 }
             }
+        compositeDisposable.add(disposable)
 
         return source
     }
@@ -67,7 +75,7 @@ class GithubApiRepository @Inject constructor(
      */
     fun getStarred(user: String): Flowable<List<StarredRepo>> {
         val source = repoDatabase.starredReposDao().getAll()
-        source
+        val disposable = source
             .take(1)
             .subscribe {
                 service.starredRepos(user)
@@ -84,6 +92,7 @@ class GithubApiRepository @Inject constructor(
                         }
                     )
             }
+        compositeDisposable.add(disposable)
 
         return source
     }
@@ -147,7 +156,7 @@ class GithubApiRepository @Inject constructor(
     }
 
     fun logout() {
-        repoDatabase.authDao()
+        val disposable = repoDatabase.authDao()
             .getSelected()
             .subscribeOn(Schedulers.io())
             .subscribe(
@@ -161,6 +170,7 @@ class GithubApiRepository @Inject constructor(
 
                 }
             )
+        compositeDisposable.add(disposable)
     }
 
     fun getStarredRepoById(id: String): LiveData<List<StarredRepo>> {

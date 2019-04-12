@@ -20,4 +20,9 @@ class StarredViewModel : ViewModel() {
         return LiveDataReactiveStreams.fromPublisher(repository.getStarred(user))
     }
 
+    override fun onCleared() {
+        repository.dispose()
+        super.onCleared()
+    }
+
 }

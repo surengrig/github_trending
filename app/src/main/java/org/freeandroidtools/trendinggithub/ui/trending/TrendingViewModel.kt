@@ -22,4 +22,8 @@ class TrendingViewModel : ViewModel() {
 
     fun refreshTrending() = repository.refreshTrending("Android", 30)
 
+    override fun onCleared() {
+        repository.dispose()
+        super.onCleared()
+    }
 }
