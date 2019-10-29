@@ -15,8 +15,8 @@ import javax.inject.Inject
 
 
 class AuthorizationRepository @Inject constructor(
-    private var service: GithubApiService,
-    private var repoDatabase: RepoDatabase
+    private val service: GithubApiService,
+    private val repoDatabase: RepoDatabase
 ) {
 
     /**
